@@ -15,7 +15,7 @@ public class CustomerResourceImpl implements CustomerResource {
     }
 
     @Override
-    public Customer getByName(@PathParam("id")String name) {
+    public Customer getByName(@PathParam("name")String name) {
         return new Customer(name);
     }
 

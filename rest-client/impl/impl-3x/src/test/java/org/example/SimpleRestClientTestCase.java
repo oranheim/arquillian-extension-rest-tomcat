@@ -23,6 +23,7 @@ import org.example.app.CustomerResource;
 import org.example.app.CustomerResourceImpl;
 import org.example.app.JaxRsActivator;
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.arquillian.extension.rest.client.ArquillianResteasyResource;
 import org.jboss.arquillian.extension.rest.client.ClassModifier;
 import org.jboss.arquillian.junit.Arquillian;
@@ -46,9 +47,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -80,15 +79,22 @@ public class SimpleRestClientTestCase {
         }
     }
 
-
     @Deployment(testable = false)
     public static WebArchive create()
     {
-        return ShrinkWrap.create(WebArchive.class)
-            .addAsLibraries(resolveDependencies())
-            .addClasses(Customer.class, CustomerResource.class, CustomerResourceImpl.class, JaxRsActivator.class)
-            .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
-            .setWebXML("in-container-web.xml");
+        boolean isNotJBoss = !"jbossas7".equals(System.getenv().get("arquillian.target"));
+
+        if (isNotJBoss) {
+            return ShrinkWrap.create(WebArchive.class)
+                    .addAsLibraries(resolveDependencies())
+                    .addClasses(Customer.class, CustomerResource.class, CustomerResourceImpl.class, JaxRsActivator.class)
+                    .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml")
+                    .setWebXML("in-container-web.xml");
+        } else {
+            return ShrinkWrap.create(WebArchive.class)
+                    .addClasses(Customer.class, CustomerResource.class, CustomerResourceImpl.class, JaxRsActivator.class)
+                    .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
+        }
     }
 
     /**

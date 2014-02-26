@@ -111,14 +111,19 @@
     <profiles>
         <profile>
             <id>arq-jbossas-managed-7</id>
+            <properties>
+                <arquillian>jbossas7</arquillian>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <configuration>
+                            <environmentVariables>
+                                <arquillian.target>jbossas7</arquillian.target>
+                            </environmentVariables>
                             <systemProperties>
                                 <jboss.version>${version.org.jboss.jbossas}</jboss.version>
-                                <arquillian.launch>jbossas7</arquillian.launch>
                             </systemProperties>
                         </configuration>
                     </plugin>
@@ -179,6 +184,7 @@
                         <configuration>
                             <systemProperties>
                                 <arquillian.launch>tomcat</arquillian.launch>
+                                <arquillian>tomcat</arquillian>
                             </systemProperties>
                         </configuration>
                     </plugin>
